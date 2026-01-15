@@ -1,4 +1,5 @@
 import User from "./user.model.js";
+import Post from "../post/post.model.js";
 
 const userResolver = {
   Query: {
@@ -20,6 +21,10 @@ const userResolver = {
       await User.findByIdAndDelete(id);
       return "User deleted successfully";
     },
+  },
+
+  User: {
+    posts: async (user) => await Post.find({ author: user._id }),
   },
 };
 

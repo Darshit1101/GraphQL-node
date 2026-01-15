@@ -6,6 +6,7 @@ const userTypeDef = gql`
     name: String
     email: String
     age: Int
+    posts: [Post]
   }
 
   type Query {
