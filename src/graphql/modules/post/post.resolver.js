@@ -3,8 +3,8 @@ import UserModel from "../user/user.model.js";
 
 const postResolver = {
   Query: {
-    posts: async () => await PostModel.find().populate("author"),
-    post: async (_, { id }) => await PostModel.findById(id).populate("author"),
+    posts: async () => await PostModel.find(),
+    post: async (_, { id }) => await PostModel.findById(id),
   },
 
   Mutation: {
@@ -16,7 +16,7 @@ const postResolver = {
     updatePost: async (_, { id, ...data }) => {
       return await PostModel.findByIdAndUpdate(id, data, {
         new: true,
-      }).populate("author");
+      });
     },
 
     deletePost: async (_, { id }) => {
