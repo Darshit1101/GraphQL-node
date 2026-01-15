@@ -5,6 +5,7 @@ A simple GraphQL API built with Node.js, Express, Apollo Server, and MongoDB usi
 ## Features
 
 - User CRUD operations (Create, Read, Update, Delete)
+- Post CRUD operations with user relations
 - GraphQL schema with queries and mutations
 - MongoDB integration with Mongoose
 - Environment-based configuration
@@ -69,22 +70,28 @@ Once the server is running, you can access the GraphQL Playground at `http://loc
 
 ### Types
 
-- **User**: Represents a user with id, name, email, and age fields
+- **User**: Represents a user with id, name, email, age, and posts fields
+- **Post**: Represents a post with id, title, content, and author fields
 
 ### Queries
 
 - `users`: Get all users
 - `user(id: ID!)`: Get a specific user by ID
+- `posts`: Get all posts
+- `post(id: ID!)`: Get a specific post by ID
 
 ### Mutations
 
 - `createUser(name: String!, email: String!, age: Int)`: Create a new user
 - `updateUser(id: ID!, name: String, email: String, age: Int)`: Update an existing user
 - `deleteUser(id: ID!)`: Delete a user by ID
+- `createPost(title: String!, content: String!, authorId: ID!)`: Create a new post
+- `updatePost(id: ID!, title: String, content: String)`: Update an existing post
+- `deletePost(id: ID!)`: Delete a post by ID
 
 ### Example Queries
 
-#### Get all users:
+#### Get all users with their posts:
 
 ```graphql
 query {
@@ -93,6 +100,29 @@ query {
     name
     email
     age
+    posts {
+      id
+      title
+      content
+    }
+  }
+}
+```
+
+#### Get all posts with author details:
+
+```graphql
+query {
+  posts {
+    id
+    title
+    content
+    author {
+      id
+      name
+      email
+      age
+    }
   }
 }
 ```
@@ -110,6 +140,25 @@ mutation {
 }
 ```
 
+#### Create a post:
+
+```graphql
+mutation {
+  createPost(
+    title: "My First Post"
+    content: "Hello GraphQL!"
+    authorId: "user_id_here"
+  ) {
+    id
+    title
+    content
+    author {
+      name
+    }
+  }
+}
+```
+
 ## Project Structure
 
 ```
@@ -121,10 +170,14 @@ mutation {
 │   └── graphql/
 │       ├── index.js              # GraphQL schema setup
 │       └── modules/
-│           └── user/
-│               ├── user.model.js     # User Mongoose model
-│               ├── user.resolver.js  # User GraphQL resolvers
-│               └── user.schema.js    # User GraphQL schema
+│           ├── user/
+│           │   ├── user.model.js     # User Mongoose model
+│           │   ├── user.resolver.js  # User GraphQL resolvers
+│           │   └── user.schema.js    # User GraphQL schema
+│           └── post/
+│               ├── post.model.js     # Post Mongoose model
+│               ├── post.resolver.js  # Post GraphQL resolvers
+│               └── post.schema.js    # Post GraphQL schema
 ├── package.json
 ├── .env.example
 └── README.md
