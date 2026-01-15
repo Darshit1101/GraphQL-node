@@ -1,30 +1,30 @@
-import User from "./user.model.js";
-import Post from "../post/post.model.js";
+import UserModel from "./user.model.js";
+import PostModel from "../post/post.model.js";
 
 const userResolver = {
   Query: {
-    users: async () => await User.find(),
-    user: async (_, { id }) => await User.findById(id),
+    users: async () => await UserModel.find(),
+    user: async (_, { id }) => await UserModel.findById(id),
   },
 
   Mutation: {
     createUser: async (_, args) => {
-      const user = new User(args);
+      const user = new UserModel(args);
       return await user.save();
     },
 
     updateUser: async (_, { id, ...data }) => {
-      return await User.findByIdAndUpdate(id, data, { new: true });
+      return await UserModel.findByIdAndUpdate(id, data, { new: true });
     },
 
     deleteUser: async (_, { id }) => {
-      await User.findByIdAndDelete(id);
+      await UserModel.findByIdAndDelete(id);
       return "User deleted successfully";
     },
   },
 
   User: {
-    posts: async (user) => await Post.find({ author: user._id }),
+    posts: async (user) => await PostModel.find({ author: user._id }),
   },
 };
 
